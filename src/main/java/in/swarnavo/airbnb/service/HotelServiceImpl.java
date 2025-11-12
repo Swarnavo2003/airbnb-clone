@@ -2,6 +2,7 @@ package in.swarnavo.airbnb.service;
 
 import in.swarnavo.airbnb.dto.HotelDto;
 import in.swarnavo.airbnb.entity.Hotel;
+import in.swarnavo.airbnb.entity.Room;
 import in.swarnavo.airbnb.exception.ResourceNotFoundException;
 import in.swarnavo.airbnb.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
+    private final InventoryService inventoryService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -66,6 +68,9 @@ public class HotelServiceImpl implements HotelService {
                 .findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : " + hotelId));
         hotel.setActive(true);
-        // TODO: Create Inventory for all the rooms for this hotel
+
+        for(Room room: hotel.getRooms()) {
+            inventoryService.initializeRoomForAYear(room);
+        }
     }
 }
