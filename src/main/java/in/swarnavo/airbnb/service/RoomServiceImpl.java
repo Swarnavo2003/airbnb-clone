@@ -52,7 +52,11 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getSingleRoomById(Long roomId) {
-        return null;
+        log.info("Fetching room with room ID: {}", roomId);
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : " + roomId));
+        return modelMapper.map(room, RoomDto.class);
     }
 
     @Override
