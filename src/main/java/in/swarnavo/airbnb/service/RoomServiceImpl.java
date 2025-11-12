@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto createNewRoom(Long hotelId, RoomDto roomDto) {
-        log.info("Creating a new room in hostel with ID: {}", hotelId);
+        log.info("Creating a new room in hotel with ID: {}", hotelId);
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : " + hotelId));
@@ -39,7 +40,14 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> getAllRoomsInHotel(Long hotelId) {
-        return List.of();
+        log.info("Fetching rooms with hotel with ID: {}", hotelId);
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : " + hotelId));
+        return hotel.getRooms()
+                .stream()
+                .map((element) -> modelMapper.map(element, RoomDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
