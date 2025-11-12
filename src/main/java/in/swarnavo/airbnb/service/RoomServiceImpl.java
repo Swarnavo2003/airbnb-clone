@@ -55,7 +55,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Fetching room with room ID: {}", roomId);
         Room room = roomRepository
                 .findById(roomId)
-                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID : " + roomId));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID : " + roomId));
         return modelMapper.map(room, RoomDto.class);
     }
 
