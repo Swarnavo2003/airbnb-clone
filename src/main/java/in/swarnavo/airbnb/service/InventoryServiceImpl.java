@@ -1,10 +1,12 @@
 package in.swarnavo.airbnb.service;
 
 import in.swarnavo.airbnb.dto.HotelDto;
+import in.swarnavo.airbnb.dto.HotelPriceDto;
 import in.swarnavo.airbnb.dto.HotelSearchRequest;
 import in.swarnavo.airbnb.entity.Hotel;
 import in.swarnavo.airbnb.entity.Inventory;
 import in.swarnavo.airbnb.entity.Room;
+import in.swarnavo.airbnb.repository.HotelMinPriceRepository;
 import in.swarnavo.airbnb.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final HotelMinPriceRepository hotelMinPriceRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -53,11 +56,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
         long dateCount = ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate()) + 1;
 
-        Page<Hotel> hotelPage = inventoryRepository.findHotelsWithAvailableInventory(
+        Page<HotelPriceDto> hotelPage = hotelMinPriceRepository.findHotelsWithAvailableInventory(
                 hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),
                 hotelSearchRequest.getEndDate(),
@@ -66,6 +69,6 @@ public class InventoryServiceImpl implements InventoryService {
                 pageable
         );
 
-        return hotelPage.map((hotel) -> modelMapper.map(hotel, HotelDto.class));
+        return hotelPage;
     }
 }
