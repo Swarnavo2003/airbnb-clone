@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 
-@Service
 @RequiredArgsConstructor
 public class UrgencyPricingStrategy implements PriceStrategy {
 
