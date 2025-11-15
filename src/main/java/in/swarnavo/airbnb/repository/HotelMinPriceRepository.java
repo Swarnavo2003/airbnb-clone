@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Repository
 public interface HotelMinPriceRepository extends JpaRepository<HotelMinPrice, Long> {
@@ -31,4 +32,6 @@ public interface HotelMinPriceRepository extends JpaRepository<HotelMinPrice, Lo
             @Param("dateCount") Long dateCount,
             Pageable pageable
     );
+
+    Optional<HotelMinPrice> findByHotelAndDate(Hotel hotel, LocalDate date);
 }
