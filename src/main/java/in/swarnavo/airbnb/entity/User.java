@@ -31,6 +31,8 @@ public class User implements UserDetails {
 
     private String name;
 
+    private Role role;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
