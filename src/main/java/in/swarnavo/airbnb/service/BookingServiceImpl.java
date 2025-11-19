@@ -5,6 +5,7 @@ import in.swarnavo.airbnb.dto.BookingRequest;
 import in.swarnavo.airbnb.dto.GuestDto;
 import in.swarnavo.airbnb.entity.*;
 import in.swarnavo.airbnb.entity.enums.BookingStatus;
+import in.swarnavo.airbnb.entity.enums.Role;
 import in.swarnavo.airbnb.exception.ResourceNotFoundException;
 import in.swarnavo.airbnb.exception.UnAuthorisedException;
 import in.swarnavo.airbnb.repository.*;
@@ -124,9 +125,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     public User getCurrentUser() {
-        return (User) SecurityContextHolder
+        User user = (User) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
+
+        if(user.getRole() != Role.GUEST) {
+            throw new UnAuthorisedException("Only guests can initialize a booking");
+        }
+        return user;
     }
 }

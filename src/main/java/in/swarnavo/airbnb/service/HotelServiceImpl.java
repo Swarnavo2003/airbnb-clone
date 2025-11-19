@@ -6,6 +6,7 @@ import in.swarnavo.airbnb.dto.RoomDto;
 import in.swarnavo.airbnb.entity.Hotel;
 import in.swarnavo.airbnb.entity.Room;
 import in.swarnavo.airbnb.entity.User;
+import in.swarnavo.airbnb.entity.enums.Role;
 import in.swarnavo.airbnb.exception.ResourceNotFoundException;
 import in.swarnavo.airbnb.exception.UnAuthorisedException;
 import in.swarnavo.airbnb.repository.HotelRepository;
@@ -39,6 +40,10 @@ public class HotelServiceImpl implements HotelService {
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
+
+        if(user.getRole() != Role.HOTEL_MANAGER) {
+            throw new UnAuthorisedException("Only Hotel Managers can create hotels");
+        }
         hotel.setOwner(user);
 
         hotel = hotelRepository.save(hotel);
